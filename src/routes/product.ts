@@ -11,7 +11,7 @@ router.get('/products', (req, res) => {
   mysqlConnection.query('select count(*) as count from products;', (err, rows) => {
     const count = rows[0].count;
     if (!err) {
-      mysqlConnection.query('SELECT * FROM products prod limit ?, ?;', [offset, limit], (err, rows) => {
+      mysqlConnection.query('SELECT * FROM products limit ?, ?;', [offset, limit], (err, rows) => {
         if (!err) {
           res.send({
             success: true,
@@ -25,6 +25,22 @@ router.get('/products', (req, res) => {
         } else {
           console.log(err);
           res.sendStatus(500);
+        }
+      });
+    } else {
+      console.log(err);
+      res.sendStatus(500);
+    }
+  });
+});
+
+router.get('/products/full', (req, res) => {
+  mysqlConnection.query('SELECT * FROM products;', (err, rows) => {
+    if (!err) {
+      res.send({
+        success: true,
+        data: {
+          products: rows
         }
       });
     } else {
@@ -81,17 +97,15 @@ router.delete('/products/:id', (req, res) => {
 });
 
 router.patch('/products/:id', (req, res) => {
-  isAdmin(req, res, function() {
-    const product = req.body;
-    mysqlConnection.query('update products set ? where product_id = ?;', [product, req.params.id], (err) => {
-      if (!err) {
-        res.send({
-          success: true
-        });
-      } else {
-        console.log(err);
-        res.sendStatus(500);
-      }
-    });
+  const product = req.body;
+  mysqlConnection.query('update products set ? where product_id = ?;', [product, req.params.id], (err) => {
+    if (!err) {
+      res.send({
+        success: true
+      });
+    } else {
+      console.log(err);
+      res.sendStatus(500);
+    }
   });
 });
