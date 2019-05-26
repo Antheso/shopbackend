@@ -4,6 +4,8 @@ import * as cors from 'cors';
 import { router as productRouter } from './routes/product';
 import { router as userRouter } from './routes/user';
 import { router as loginRouter } from './routes/login';
+import { router as deptRouter } from './routes/dept';
+import { router as empRouter } from './routes/emp';
 
 const app = express(),
   PORT = 6969,
@@ -22,6 +24,8 @@ app.use(router);
 app.use(productRouter);
 app.use(userRouter);
 app.use(loginRouter);
+app.use(deptRouter);
+app.use(empRouter);
 
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
